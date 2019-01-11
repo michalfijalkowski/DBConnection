@@ -15,25 +15,29 @@ public class Main extends Application {
 
 		DBConnection j = new DBConnection(916361628, "BKi-I%Z(0mx");
 		
-		Timestamp start = java.sql.Timestamp.valueOf("2018-01-24 00:47:00");
+		Timestamp start = java.sql.Timestamp.valueOf("2018-01-01 00:47:00");
 		Timestamp end = java.sql.Timestamp.valueOf("2018-12-29 00:47:00");
+		
+		String zone[] = {"Ochota", "Rembertow", "Mokotow", "Bialoleka"};
+		System.out.println(zone.length);
+		String vehicle[] = { "motocykl", "samochod_ciezarowy", "samochod_osobowy"};
 
-		ResultSet result = j.raport("ochota", "motocykl", start, end);
+		ResultSet result = j.raport(zone, vehicle, start, end);
 		
 		while (result.next()) {
-			String zone = result.getString("ZONE.Name");
-			String type = result.getString("VEHICLE.Type");
+			String getZone = result.getString("ZONE.Name");
 			Timestamp startDate = result.getTimestamp("PRESENCE.Start_date");
 			Timestamp endDate = result.getTimestamp("PRESENCE.End_date");
 			String vehicleType = result.getString("VEHICLE.Type");
-			System.out.println(zone + " " + startDate + " " +  endDate + " " +  vehicleType);
+			
+			System.out.println(getZone + " " + startDate + " " +  endDate + " " +  vehicleType);
 		}
 		
-		ResultSet resultZone = j.zoneList();
-		while(resultZone.next()) {
-			String e = resultZone.getString(1);
-			System.out.println(e);
-		}
+		int id = j.getUserId();
+		System.out.println(id);
+		
+		//j.addVehicle("DDDDD", "samochod_osobowy");
+		
 
 		j.closeConnection();
 	}

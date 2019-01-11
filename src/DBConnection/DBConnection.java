@@ -31,7 +31,7 @@ public class DBConnection {
 		}
 	}
 
-	public void closeConnection() {
+	void closeConnection() {
 		try {
 			connection.close();
 		} catch (SQLException e) {
@@ -59,16 +59,30 @@ public class DBConnection {
 		return false;
 	}
 
-	ResultSet raport(String zone, String vehicle, Timestamp start, Timestamp end) {
+	ResultSet raport(String zone[], String vehicle[], Timestamp start, Timestamp end) {
+		String query = "select ZONE.Name, PRESENCE.Start_date, PRESENCE.End_date, VEHICLE.Type from PRESENCE\r\n"
+				+ "INNER JOIN ZONE ON PRESENCE.Zone_ID = ZONE.id\r\n"
+				+ "INNER JOIN VEHICLE ON PRESENCE.Registration_number = VEHICLE.Registration_number\r\n"
+				+ "INNER JOIN USER ON VEHICLE.User_id = USER.id\r\n" + "WHERE Start_date >= \"" + start + "\"\r\n"
+				+ "&& End_date <= \"" + end + "\" && USER.TelNumber = \"" + login + "\" &&";
+		query += "(";
+		for (int i = 0; i < zone.length; i++) {
+			if (i == zone.length - 1)
+				query += "ZONE.Name = \"" + zone[i] + "\") &&";
+			else
+				query += "ZONE.Name = \"" + zone[i] + "\" ||";
+		}
+		query += "(";
+		for (int i = 0; i < vehicle.length; i++) {
+			if (i == vehicle.length - 1)
+				query += "VEHICLE.Type = \"" + vehicle[i] + "\")";
+			else
+				query += "VEHICLE.Type = \"" + vehicle[i] + "\" ||";
+		}
 		try {
 			statement = connection.createStatement();
-			ResultSet result = statement.executeQuery(
-					"select ZONE.Name, PRESENCE.Start_date, PRESENCE.End_date, VEHICLE.Type from PRESENCE\r\n"
-							+ "INNER JOIN ZONE ON PRESENCE.Zone_ID = ZONE.id\r\n"
-							+ "INNER JOIN VEHICLE ON PRESENCE.Registration_number = VEHICLE.Registration_number\r\n"
-							+ "INNER JOIN USER ON PRESENCE.id = USER.id\r\n" + "WHERE Start_date >= \"" + start
-							+ "\" && End_date <= \"" + end + "\" && VEHICLE.Type = \"" + vehicle + "\" &&"
-							+ " ZONE.Name = \"Ochota\" && USER.TelNumber = " + login + "\r\n" + "\r\n" + "");
+			ResultSet result = statement.executeQuery(query);
+
 			statement.close();
 			return result;
 		} catch (SQLException e) {
@@ -89,7 +103,7 @@ public class DBConnection {
 		}
 		return null;
 	}
-	
+
 	ResultSet zoneList() {
 		try {
 			statement = connection.createStatement();
@@ -100,6 +114,35 @@ public class DBConnection {
 			System.out.println("Nie jestes zalogowany");
 		}
 		return null;
+	}
+	
+	int getUserId()
+	{
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT id from USER where TelNumber = 916361628" );
+			statement.close();
+			while (result.next()) {
+				int id = result.getInt("USER.id");
+				return id;
+			}
+		} catch (SQLException e) {
+			System.out.println("Nie jestes zalogowany");
+		}
+		return 0;
+	}
+	
+	void addVehicle (String regNumber, String type) 
+	{
+		try {
+			statement = connection.createStatement();
+			statement.executeQuery("INSERT into VEHICLE VALUES (\"" + regNumber + "\", \"" + type + "\"," + getUserId() + ") ");
+			statement.close();
+			
+		} catch (SQLException e) {
+			System.out.println("Taki pojazd ju¿ dodano");
+		}
+		
 	}
 
 }
