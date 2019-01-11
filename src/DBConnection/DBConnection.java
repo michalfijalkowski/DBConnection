@@ -15,8 +15,9 @@ public class DBConnection {
 
 	private Connection connection;
 	private java.sql.Statement statement;
-	private int login;
-
+	private int login = 0;	//numer telefonu po ktorym identyfukujemy uzytkownika
+	
+	//utworzenie po³¹czenia przy poprawnym logowaniu
 	public DBConnection(int phoneNumber, String password) {
 		try {
 			Class.forName(DBDRIVER).newInstance();
@@ -30,7 +31,7 @@ public class DBConnection {
 			e.printStackTrace();
 		}
 	}
-
+	//zamkniecie polaczenia wykonywanie przy wylogowaniu
 	void closeConnection() {
 		try {
 			connection.close();
@@ -38,7 +39,7 @@ public class DBConnection {
 			System.out.println("Connection doesn't exist");
 		}
 	}
-
+	//sprawdzenie poprawnosci loginu i hasla
 	boolean verify(int telNumber, String password) {
 		try {
 			statement = connection.createStatement();
@@ -59,6 +60,7 @@ public class DBConnection {
 		return false;
 	}
 
+	//generowanie raportow, wybor strefy, rodzaju pojazdu, zakresu czasu
 	ResultSet raport(String zone[], String vehicle[], Timestamp start, Timestamp end) {
 		String query = "select ZONE.Name, PRESENCE.Start_date, PRESENCE.End_date, VEHICLE.Type from PRESENCE\r\n"
 				+ "INNER JOIN ZONE ON PRESENCE.Zone_ID = ZONE.id\r\n"
@@ -92,6 +94,7 @@ public class DBConnection {
 
 	}
 
+	//zwraca liste nazw mozliwych typow pojazdu
 	ResultSet vehicleList() {
 		try {
 			statement = connection.createStatement();
@@ -103,7 +106,8 @@ public class DBConnection {
 		}
 		return null;
 	}
-
+	
+	//zwraca liste nazw mozliwych stref
 	ResultSet zoneList() {
 		try {
 			statement = connection.createStatement();
@@ -116,6 +120,7 @@ public class DBConnection {
 		return null;
 	}
 	
+	//zwraca ID zalogowanego uzytkownika
 	int getUserId()
 	{
 		try {
@@ -132,6 +137,7 @@ public class DBConnection {
 		return 0;
 	}
 	
+	//dodaje pojazd zalogowanego uzytkownika do VEHICLE o podanym numerze rejestracyjnym i typie pojazdu
 	void addVehicle (String regNumber, String type) 
 	{
 		try {
