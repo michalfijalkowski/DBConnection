@@ -20,6 +20,8 @@ public class Main extends Application {
 		
 		String zone[] = {"Ochota", "Rembertow", "Mokotow", "Bialoleka"};
 		String vehicle[] = {"HPHCK0O", "HCLAQ1Z"};
+		
+		String rejestracja[] = {"Eryk", "Prokopczuk", "997", "AAA2", "motocykl", "Ochota", "12344321", "123", "2022-06-09", "qwe"};
 
 		ResultSet result = j.raport(zone, vehicle, start, end);
 		
@@ -38,6 +40,8 @@ public class Main extends Application {
 		//j.addVehicle("DDDDD", "samochod_osobowy");
 		
 		DBConnection admin = new DBConnection("123");
+		admin.addUser(rejestracja);
+		
 		admin.closeConnection();
 		
 		j.closeConnection();
