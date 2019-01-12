@@ -19,7 +19,6 @@ public class Main extends Application {
 		Timestamp end = java.sql.Timestamp.valueOf("2018-12-29 00:47:00");
 		
 		String zone[] = {"Ochota", "Rembertow", "Mokotow", "Bialoleka"};
-		System.out.println(zone.length);
 		String vehicle[] = { "motocykl", "samochod_ciezarowy", "samochod_osobowy"};
 
 		ResultSet result = j.raport(zone, vehicle, start, end);
