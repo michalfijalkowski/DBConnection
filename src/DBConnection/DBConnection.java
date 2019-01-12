@@ -17,6 +17,23 @@ public class DBConnection {
 	private java.sql.Statement statement;
 	private int login = 0; // numer telefonu po ktorym identyfukujemy uzytkownika
 
+	// utworzenie polaczenia administratora
+	public DBConnection(String admin) {
+		try {
+			Class.forName(DBDRIVER).newInstance();
+			connection = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+			if (admin != "123") {
+				System.out.println("Bledne dane admina");
+				closeConnection();
+			} else {
+				System.out.println("ZALOGOWANO ADMINA");
+			}
+
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// utworzenie po³¹czenia przy poprawnym logowaniu
 	public DBConnection(int phoneNumber, String password) {
 		try {
@@ -67,7 +84,7 @@ public class DBConnection {
 
 	// generowanie raportow, wybor strefy, rodzaju pojazdu, zakresu czasu
 	public ResultSet raport(String zone[], String vehicle[], Timestamp start, Timestamp end) {
-		String query = "select ZONE.Name, PRESENCE.Start_date, PRESENCE.End_date, VEHICLE.Type from PRESENCE\r\n"
+		String query = "select ZONE.Name, PRESENCE.Start_date, PRESENCE.End_date, VEHICLE.Type, PRESENCE.Registration_number from PRESENCE\r\n"
 				+ "INNER JOIN ZONE ON PRESENCE.Zone_ID = ZONE.id\r\n"
 				+ "INNER JOIN VEHICLE ON PRESENCE.Registration_number = VEHICLE.Registration_number\r\n"
 				+ "INNER JOIN USER ON VEHICLE.User_id = USER.id\r\n" + "WHERE Start_date >= \"" + start + "\"\r\n"
@@ -82,9 +99,9 @@ public class DBConnection {
 		query += "(";
 		for (int i = 0; i < vehicle.length; i++) {
 			if (i == vehicle.length - 1)
-				query += "VEHICLE.Type = \"" + vehicle[i] + "\")";
+				query += "PRESENCE.Registration_number = \"" + vehicle[i] + "\")";
 			else
-				query += "VEHICLE.Type = \"" + vehicle[i] + "\" ||";
+				query += "PRESENCE.Registration_number = \"" + vehicle[i] + "\" ||";
 		}
 		try {
 			statement = connection.createStatement();

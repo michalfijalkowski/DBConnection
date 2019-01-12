@@ -19,7 +19,7 @@ public class Main extends Application {
 		Timestamp end = java.sql.Timestamp.valueOf("2018-12-29 00:47:00");
 		
 		String zone[] = {"Ochota", "Rembertow", "Mokotow", "Bialoleka"};
-		String vehicle[] = { "motocykl", "samochod_ciezarowy", "samochod_osobowy"};
+		String vehicle[] = {"HPHCK0O", "HCLAQ1Z"};
 
 		ResultSet result = j.raport(zone, vehicle, start, end);
 		
@@ -27,9 +27,9 @@ public class Main extends Application {
 			String getZone = result.getString("ZONE.Name");
 			Timestamp startDate = result.getTimestamp("PRESENCE.Start_date");
 			Timestamp endDate = result.getTimestamp("PRESENCE.End_date");
-			String vehicleType = result.getString("VEHICLE.Type");
+			String vehicleReg = result.getString("PRESENCE.Registration_number");
 			
-			System.out.println(getZone + " " + startDate + " " +  endDate + " " +  vehicleType);
+			System.out.println(getZone + " " + startDate + " " +  endDate + " " +  vehicleReg);
 		}
 		
 		int id = j.getUserId();
@@ -37,7 +37,9 @@ public class Main extends Application {
 		
 		//j.addVehicle("DDDDD", "samochod_osobowy");
 		
-
+		DBConnection admin = new DBConnection("123");
+		admin.closeConnection();
+		
 		j.closeConnection();
 	}
 
