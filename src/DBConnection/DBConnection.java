@@ -120,8 +120,7 @@ public class DBConnection {
 	public ResultSet vehicleList() {
 		try {
 			statement = connection.createStatement();
-			ResultSet result = statement
-					.executeQuery("SELECT Registration_number from VEHICLE where User_id =  " + getUserId());
+			ResultSet result = statement.executeQuery("SELECT Type from TARIFF_VEHICLE");
 			statement.close();
 			return result;
 		} catch (SQLException e) {
@@ -129,6 +128,20 @@ public class DBConnection {
 		}
 		return null;
 	}
+	
+	// zwraca liste rejestracji uzytkownika
+		public ResultSet RegistrationList() {
+			try {
+				statement = connection.createStatement();
+				ResultSet result = statement
+						.executeQuery("SELECT Registration_number from VEHICLE where User_id =  " + getUserId());
+				statement.close();
+				return result;
+			} catch (SQLException e) {
+				System.out.println("Nie jestes zalogowany");
+			}
+			return null;
+		}
 
 	// zwraca liste nazw mozliwych stref
 	public ResultSet zoneList() {
@@ -160,7 +173,8 @@ public class DBConnection {
 		return 0;
 	}
 
-	// dodaje pojazd zalogowanego uzytkownika do VEHICLE o podanym numerze rejestracyjnym i typie pojazdu
+	// dodaje pojazd zalogowanego uzytkownika do VEHICLE o podanym numerze
+	// rejestracyjnym i typie pojazdu
 	public void addVehicle(String regNumber, String type) {
 		try {
 			statement = connection.createStatement();
@@ -182,15 +196,15 @@ public class DBConnection {
 			int freeUserId = getMaxId("id", "FREE_ACCESS_USER") + 1;
 			int zone = getZoneId("Ochota");
 			statement = connection.createStatement();
-
-			statement.executeQuery("INSERT into USER VALUES (" + userId + ",\"" + rejestracja[0] + "\", \""
-					+ rejestracja[1] + "\", \"" + rejestracja[2] + "\", \"" + rejestracja[9] + "\", 'aktywny');");
-			statement.executeQuery("INSERT into VEHICLE VALUES (\"" + rejestracja[3] + "\", \"" + rejestracja[4] + "\","
-					+ userId + ");");
+	
+			statement.executeQuery("INSERT into USER VALUES (" + userId + ",\"" + rejestracja[0] + "\", \"" + rejestracja[1]
+					+ "\", \"" + rejestracja[2] + "\", \"" + rejestracja[9] + "\", 'aktywny');");
+			statement.executeQuery("INSERT into VEHICLE VALUES (\"" + rejestracja[3] + "\", \"" + rejestracja[4] + "\"," + userId
+					+ ");");
 			statement.executeQuery("INSERT into PAYMENT_CARD VALUES (" + cardId + ",\"" + rejestracja[6] + "\", \""
 					+ rejestracja[7] + "\", \"" + rejestracja[8] + "\"," + userId + ");");
-			statement.executeQuery("INSERT into FREE_ACCESS_USER VALUES(" + freeUserId + ", 'mieszkaniec', " + userId
-					+ "," + zone + ");");
+			statement.executeQuery("INSERT into FREE_ACCESS_USER VALUES(" + freeUserId + ", 'mieszkaniec', " + userId + "," + zone
+					+ ");");
 			statement.close();
 		} catch (SQLException e) {
 			System.out.println("Pojazd jest juz w bazie");
@@ -198,7 +212,8 @@ public class DBConnection {
 
 	}
 
-	// zwraca maksymalny indeks dla podanej kolumny w podanej tabeli
+	
+
 	public int getMaxId(String column, String table) {
 		try {
 			statement = connection.createStatement();
@@ -214,7 +229,6 @@ public class DBConnection {
 		return 0;
 	}
 
-	// zwraca id strefy dla jej nazwy
 	public int getZoneId(String zoneName) {
 		try {
 			statement = connection.createStatement();
