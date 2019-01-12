@@ -34,7 +34,16 @@ public class Main extends Application {
 			System.out.println(getZone + " " + startDate + " " +  endDate + " " +  vehicleReg);
 		}
 		
-		int id = j.getUserId();
+		ResultSet rs = j.vehicleList();
+		
+		while (rs.next()) {
+			String getZone = rs.getString("VEHICLE.Registration_number");
+			
+			
+			System.out.println(getZone);
+		}
+		
+		/*int id = j.getUserId();
 		System.out.println(id);
 		
 		//j.addVehicle("DDDDD", "samochod_osobowy");
@@ -42,7 +51,7 @@ public class Main extends Application {
 		DBConnection admin = new DBConnection("123");
 		admin.addUser(rejestracja);
 		
-		admin.closeConnection();
+		admin.closeConnection();*/
 		
 		j.closeConnection();
 	}
