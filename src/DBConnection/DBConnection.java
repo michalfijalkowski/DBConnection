@@ -212,7 +212,6 @@ public class DBConnection {
 
 	}
 
-	
 
 	public int getMaxId(String column, String table) {
 		try {
@@ -237,6 +236,36 @@ public class DBConnection {
 			while (result.next()) {
 				int zoneId = result.getInt("ZONE.id");
 				return zoneId;
+			}
+		} catch (SQLException e) {
+			System.out.println("Nie jestes zalogowany");
+		}
+		return 0;
+	}
+	
+	public float getZonePrice(String zoneName) {
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("select Price from ZONE where Name = \"" + zoneName + "\"");
+			statement.close();
+			while (result.next()) {
+				float zonePrice = result.getFloat("ZONE.Price");
+				return zonePrice;
+			}
+		} catch (SQLException e) {
+			System.out.println("Nie jestes zalogowany");
+		}
+		return 0;
+	}
+	
+	public float getVehicleFactory(String vehicleType) {
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("select Factor from TARIFF_VEHICLE where Type = \'" + vehicleType + "\'");
+			statement.close();
+			while (result.next()) {
+				float vehicleFactory = result.getFloat("TARIFF_VEHICLE.Factor");
+				return vehicleFactory;
 			}
 		} catch (SQLException e) {
 			System.out.println("Nie jestes zalogowany");

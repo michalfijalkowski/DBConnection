@@ -13,9 +13,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws SQLException {
 	
 
-		DBConnection j = new DBConnection(916361628, "BKi-I%Z(0mx");
+		DBConnection j = new DBConnection(727174451, "-803757450");
 		
-		Timestamp start = java.sql.Timestamp.valueOf("2018-01-01 00:47:00");
+		/*Timestamp start = java.sql.Timestamp.valueOf("2018-01-01 00:47:00");
 		Timestamp end = java.sql.Timestamp.valueOf("2018-12-29 00:47:00");
 		
 		String zone[] = {"Ochota", "Rembertow", "Mokotow", "Bialoleka"};
@@ -41,7 +41,10 @@ public class Main extends Application {
 			
 			
 			System.out.println(getZone);
-		}
+		}*/
+		
+		System.out.println(j.getZonePrice("Bielany"));
+		System.out.println(j.getVehicleFactory("samochod_osobowy"));
 		
 		/*int id = j.getUserId();
 		System.out.println(id);
